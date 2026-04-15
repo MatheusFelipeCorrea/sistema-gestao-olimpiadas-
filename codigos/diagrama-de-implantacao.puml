@@ -1,0 +1,75 @@
+@startuml diagrama-de-implantacao
+
+skinparam node {
+BackgroundColor LightSkyBlue
+BorderColor Navy
+FontSize 13
+}
+skinparam database {
+BackgroundColor LightSalmon
+BorderColor DarkRed
+}
+skinparam component {
+BackgroundColor LightYellow
+BorderColor DarkOrange
+}
+
+title Sistema de Gestão das Olimpíadas — Diagrama de Implantação
+
+'─── Cliente ───────────────────────────────────────────────────
+node "Dispositivo do Usuário" as ClientNode {
+[Navegador Web\n(Chrome / Firefox)] as Browser
+[App Mobile\n(Android / iOS)]       as Mobile
+}
+
+'─── CDN / Proxy ───────────────────────────────────────────────
+node "CDN / Proxy Reverso\n(Cloudflare + Nginx)" as CDN {
+[Balanceador de Carga]          as LB
+[Servidor de Arquivos Estáticos] as Static
+}
+
+'─── Servidor Web ──────────────────────────────────────────────
+node "Servidor Web\n(Nginx — Ubuntu 22.04)" as WebServer {
+[Frontend Build\n(React / Angular)] as FE
+}
+
+'─── Servidor de Aplicação ─────────────────────────────────────
+node "Servidor de Aplicação\n(Java 17 + Spring Boot)" as AppServer {
+[API REST]                 as API
+[Autenticação JWT]         as Auth
+[Módulo de Competições]    as MC
+[Módulo de Inscrições]     as MI
+[Módulo de Alocação]       as MA
+[Módulo de Resultados]     as MR
+[Módulo de Relatórios]     as MRel
+}
+
+'─── Banco de Dados ────────────────────────────────────────────
+node "Servidor de Banco de Dados\n(PostgreSQL 15 — Ubuntu 22.04)" as DBServer {
+database "sgo_db\n(PostgreSQL)" as DB
+}
+
+'─── Cache ─────────────────────────────────────────────────────
+node "Servidor de Cache\n(Redis 7)" as CacheServer {
+database "Redis Cache" as Cache
+}
+
+'─── E-mail ────────────────────────────────────────────────────
+node "Servidor de E-mail\n(SendGrid / SMTP)" as MailServer {
+[Serviço de E-mail] as Email
+}
+
+'─── Comunicações ──────────────────────────────────────────────
+Browser    --> CDN        : HTTPS :443
+Mobile     --> CDN        : HTTPS :443
+
+CDN        --> WebServer  : HTTP  :80
+CDN        --> AppServer  : HTTP  :8080
+
+WebServer  --> AppServer  : HTTP  :8080
+
+AppServer  --> DBServer   : JDBC / TCP :5432
+AppServer  --> CacheServer: TCP :6379
+AppServer  --> MailServer : SMTP :587
+
+@enduml

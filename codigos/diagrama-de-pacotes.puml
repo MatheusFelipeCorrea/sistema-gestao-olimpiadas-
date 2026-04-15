@@ -1,0 +1,84 @@
+@startuml diagrama-de-pacotes
+
+skinparam packageStyle frame
+skinparam package {
+BackgroundColor LightYellow
+BorderColor DarkOrange
+FontSize 13
+}
+skinparam arrow {
+Color DarkSlateGray
+FontSize 11
+}
+
+title Sistema de Gestão das Olimpíadas — Diagrama de Pacotes
+
+package "sgo" {
+
+package "presentation" <<Camada de Apresentação>> {
+  class TelaLogin
+  class TelaCompeticoes
+  class TelaAtletas
+  class TelaLocais
+  class TelaResultados
+  class TelaRelatorios
+}
+
+package "controller" <<Camada de Controle>> {
+  class CompeticaoController
+  class AtletaController
+  class LocalController
+  class InscricaoController
+  class ResultadoController
+  class RelatorioController
+}
+
+package "service" <<Camada de Serviço>> {
+  class CompeticaoService
+  class InscricaoService
+  class AlocacaoService
+  class ResultadoService
+  class RelatorioService
+}
+
+package "model" <<Camada de Modelo>> {
+  class Competicao
+  class Atleta
+  class Local
+  class Inscricao
+  class Resultado
+  class Pais
+  class RelatorioMedalhas
+  enum TipoMedalha
+  enum StatusInscricao
+}
+
+package "repository" <<Camada de Repositório>> {
+  interface CompeticaoRepository
+  interface AtletaRepository
+  interface LocalRepository
+  interface InscricaoRepository
+  interface ResultadoRepository
+  interface PaisRepository
+}
+
+package "exception" <<Exceções>> {
+  class CompeticaoNotFoundException
+  class LocalIndisponivelException
+  class InscricaoDuplicadaException
+}
+}
+
+package "database" <<Infraestrutura>> {
+class PostgreSQL
+}
+
+' Dependências entre pacotes
+presentation ..> controller  : usa
+controller   ..> service     : delega
+service      ..> model       : manipula
+service      ..> repository  : persiste
+service      ..> exception   : lança
+repository   ..> PostgreSQL  : acessa
+
+@enduml

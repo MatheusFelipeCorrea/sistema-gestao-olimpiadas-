@@ -1,0 +1,58 @@
+@startuml diagrama-de-caso-de-uso
+
+skinparam packageStyle rectangle
+skinparam usecase {
+BackgroundColor LightYellow
+BorderColor DarkOrange
+FontSize 13
+}
+skinparam actor {
+BackgroundColor LightBlue
+BorderColor Navy
+}
+
+left to right direction
+title Sistema de Gestão das Olimpíadas — Diagrama de Caso de Uso
+
+actor "Administrador"  as Admin
+actor "Atleta"         as Atleta
+actor "Juiz / Árbitro" as Juiz
+
+rectangle "SGO — Sistema de Gestão das Olimpíadas" {
+
+usecase "UC01\nCadastrar Competição"         as UC01
+usecase "UC02\nEditar/Excluir Competição"    as UC02
+usecase "UC03\nAlocar Local"                 as UC03
+usecase "UC04\nVerificar Disponibilidade\nde Local" as UC04
+usecase "UC05\nInscrever Atleta"             as UC05
+usecase "UC06\nCancelar Inscrição"           as UC06
+usecase "UC07\nConsultar Competições"        as UC07
+usecase "UC08\nRegistrar Resultados"         as UC08
+usecase "UC09\nGerar Relatório de Medalhas"  as UC09
+usecase "UC10\nConsultar Classificação"      as UC10
+}
+
+' Administrador
+Admin  --> UC01
+Admin  --> UC02
+Admin  --> UC03
+Admin  --> UC09
+Admin  --> UC07
+
+' Atleta
+Atleta --> UC05
+Atleta --> UC06
+Atleta --> UC07
+Atleta --> UC10
+
+' Juiz
+Juiz   --> UC08
+Juiz   --> UC07
+
+' Relacionamentos entre casos de uso
+UC01 ..> UC03 : <<include>>
+UC03 ..> UC04 : <<include>>
+UC05 ..> UC07 : <<include>>
+UC09 ..> UC10 : <<extend>>
+
+@enduml

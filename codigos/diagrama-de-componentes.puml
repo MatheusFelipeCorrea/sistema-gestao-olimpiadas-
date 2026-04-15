@@ -1,0 +1,78 @@
+@startuml diagrama-de-componentes
+
+skinparam component {
+BackgroundColor LightGreen
+BorderColor DarkGreen
+FontSize 13
+}
+skinparam database {
+BackgroundColor LightSalmon
+BorderColor DarkRed
+}
+skinparam package {
+BackgroundColor WhiteSmoke
+BorderColor Gray
+}
+
+title Sistema de Gestão das Olimpíadas — Diagrama de Componentes
+
+package "Frontend" {
+[Interface Web\n(React / Angular)] as UI
+}
+
+package "Backend — SGO" {
+
+[API REST\n(Spring Boot)] as API
+[Autenticação / Segurança\n(JWT / OAuth2)] as Auth
+
+package "Módulos de Negócio" {
+  [Módulo de Competições]  as MC
+  [Módulo de Inscrições]   as MI
+  [Módulo de Alocação]     as MA
+  [Módulo de Resultados]   as MR
+  [Módulo de Relatórios]   as MRel
+}
+}
+
+package "Infraestrutura" {
+database "Banco de Dados\n(PostgreSQL)"  as DB
+[Cache\n(Redis)]                         as Cache
+[Serviço de E-mail\n(SMTP / SendGrid)]   as Email
+}
+
+' Interfaces REST expostas pela API
+interface "/api/competicoes" as IComp
+interface "/api/inscricoes"  as IInsc
+interface "/api/locais"      as ILoc
+interface "/api/resultados"  as IRes
+interface "/api/relatorios"  as IRel
+
+' Fluxo principal
+UI   -down-> API    : HTTPS / JSON
+
+API  -down-> Auth   : valida token JWT
+API  --> IComp
+API  --> IInsc
+API  --> ILoc
+API  --> IRes
+API  --> IRel
+
+IComp --> MC
+IInsc --> MI
+ILoc  --> MA
+IRes  --> MR
+IRel  --> MRel
+
+' Acesso ao banco
+MC   --> DB : CRUD Competições
+MI   --> DB : CRUD Inscrições
+MA   --> DB : CRUD Locais
+MR   --> DB : CRUD Resultados
+MRel --> DB : Consulta Medalhas
+
+' Serviços auxiliares
+MC   --> Cache : cacheia competições
+MI   --> Email : confirma inscrição
+MRel --> Email : envia relatório PDF
+
+@enduml

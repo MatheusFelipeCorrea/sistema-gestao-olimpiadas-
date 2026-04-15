@@ -1,0 +1,115 @@
+@startuml diagrama-de-classes
+
+skinparam classAttributeIconSize 0
+skinparam class {
+BackgroundColor LightCyan
+BorderColor SteelBlue
+ArrowColor DarkSlateBlue
+FontSize 13
+}
+
+title Sistema de Gestão das Olimpíadas — Diagrama de Classes
+
+enum TipoMedalha {
+OURO
+PRATA
+BRONZE
+SEM_MEDALHA
+}
+
+enum StatusInscricao {
+PENDENTE
+CONFIRMADA
+CANCELADA
+}
+
+class Pais {
+- id     : Long
+- nome   : String
+- codigo : String
+--
++ getId()    : Long
++ getNome()  : String
++ getCodigo(): String
+}
+
+class Atleta {
+- id             : Long
+- nome           : String
+- dataNascimento : LocalDate
+--
++ getId()   : Long
++ getNome() : String
++ getPais() : Pais
+}
+
+class Local {
+- id         : Long
+- nome       : String
+- endereco   : String
+- capacidade : Integer
+--
++ getId()       : Long
++ getNome()     : String
++ isDisponivel(data: LocalDate, horario: LocalTime) : boolean
+}
+
+class Competicao {
+- id         : Long
+- nome       : String
+- modalidade : String
+- data       : LocalDate
+- horario    : LocalTime
+--
++ getId()          : Long
++ getNome()        : String
++ getModalidade()  : String
++ getLocal()       : Local
++ getInscricoes()  : List~Inscricao~
++ getResultados()  : List~Resultado~
+}
+
+class Inscricao {
+- id            : Long
+- dataInscricao : LocalDate
+- status        : StatusInscricao
+--
++ getId()         : Long
++ getAtleta()     : Atleta
++ getCompeticao() : Competicao
++ getStatus()     : StatusInscricao
+}
+
+class Resultado {
+- id      : Long
+- posicao : Integer
+--
++ getId()      : Long
++ getPosicao() : Integer
++ getMedalha() : TipoMedalha
++ getAtleta()  : Atleta
+}
+
+class RelatorioMedalhas {
+- id      : Long
+- ouros   : Integer
+- pratas  : Integer
+- bronzes : Integer
+--
++ getPais()        : Pais
++ getTotalPontos() : Integer
++ gerarRelatorio() : String
+}
+
+' Associações
+Atleta            "*" --o "1"  Pais          : representa
+Competicao        "1" *--  "*" Inscricao     : contém
+Inscricao         "*" -->  "1" Atleta        : pertence a
+Competicao        "*" -->  "1" Local         : realizada em
+Competicao        "1" *--  "*" Resultado     : possui
+Resultado         "*" -->  "1" Atleta        : atribuido a
+Resultado              --       TipoMedalha  : recebe
+Inscricao              --       StatusInscricao
+RelatorioMedalhas "*" --> "1"  Pais          : gerado para
+
+@enduml
