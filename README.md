@@ -116,6 +116,7 @@ sistema-gestao-olimpiadas/
 | Nome          | Matrícula |
 |---------------|-----------|
 | Matheus Felipe Correa | 860725    |
+| Alice Shikida | 844663    |
 
 > Curso: Engenharia de Software — 4º Período  
 > Disciplina: Projeto de Software  
