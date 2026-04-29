@@ -14,7 +14,7 @@ O **Sistema de Gestão das Olimpíadas (SGO)** é uma plataforma desenvolvida pa
 ## 📌 Regras de Negócio
 
 1. **Cadastro de Competições:** O sistema permite cadastrar competições contendo nome da modalidade, data, horário, local e lista de atletas inscritos.
-2. **Inscrição de Atletas:** Atletas de diferentes países podem se inscrever em competições específicas. Cada atleta pode participar de várias competições, mas só pode representar um país por modalidade.
+2. **Inscrição de Atletas:** Atletas de países diferentes podem se inscrever em específicas competições. Cada atleta pode participar de várias competições, mas só pode representar um país por modalidade.
 3. **Alocação de Locais:** Os locais são alocados evitando conflitos de horário. Um local só pode abrigar uma competição por vez.
 4. **Controle de Resultados:** Após cada competição, os resultados são registrados determinando o 1º, 2º e 3º lugares.
 5. **Relatórios de Medalhas:** O sistema gera relatórios mostrando o desempenho de cada país com base nas medalhas de ouro, prata e bronze conquistadas.
